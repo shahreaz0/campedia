@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= locals.pageTitle ? pageTitle : "Campedia" %></title>
+</head>
+
+<body>
+    <% if (locals.error) { %>
+    <p> <%= error %> </p>
+    <% } %>
+</body>
+
+</html>
