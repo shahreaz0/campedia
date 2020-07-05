@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include("partials/top") %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= locals.pageTitle ? pageTitle : "Campedia" %></title>
-</head>
+<% if (locals.error) { %>
+<p> <%= error %> </p>
+<% } %>
 
-<body>
-    <% if (locals.error) { %>
-    <p> <%= error %> </p>
-    <% } %>
-</body>
-
-</html>
+<%- include("partials/bottom") %>

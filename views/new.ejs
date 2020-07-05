@@ -1,0 +1,15 @@
+<%- include("partials/top") %>
+
+<h1>Add Camp</h1>
+
+<form action="/camps" method="POST" enctype="multipart/form-data">
+
+    <label for="name">CAMP NAME</label>
+    <input type="text" name="campName" id="name">
+    <label for="image">CAMP IMAGE</label>
+    <input type="file" name="campImg" id="image">
+    <input type="submit" value="Submit">
+
+</form>
+
+<%- include("partials/bottom") %>
