@@ -1,8 +1,7 @@
 const router = require("express").Router();
 const path = require("path");
 const multer = require("multer");
-
-const camps = [];
+const Camp = require("../models/Camp");
 
 // multer config
 const upload = multer({
@@ -16,17 +15,28 @@ const upload = multer({
 	},
 });
 
-router.get("/camps", (req, res) => {
-	res.render("camps", { pageTitle: "Camps", camps });
+router.get("/camps", async (req, res) => {
+	try {
+		const camps = await Camp.find({});
+		res.render("camps", { pageTitle: "Camps", camps });
+	} catch (error) {
+		console.log(error);
+	}
 });
 
-router.post("/camps", upload.single("campImg"), (req, res) => {
-	camps.push({
-		name: req.body.campName,
-		imageUrl: "/" + path.join("img", "campImg", req.file.filename),
-	});
-	console.log(camps);
-	res.redirect("/");
+router.post("/camps", upload.single("campImg"), async (req, res) => {
+	try {
+		const camp = new Camp({
+			name: req.body.campName,
+			imageUrl: "\\" + path.join("img", "campImg", req.file.filename),
+		});
+
+		await camp.save();
+		console.log(camp);
+		res.redirect("/camps");
+	} catch (error) {
+		console.log(error);
+	}
 });
 
 router.get("/camps/new", (req, res) => {

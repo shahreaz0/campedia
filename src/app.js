@@ -2,7 +2,9 @@
 const path = require("path");
 const express = require("express");
 const chalk = require("chalk");
-require("dotenv").config();
+
+//database connection
+require("./configs/db");
 
 // routes
 const campRoutes = require("./routes/camp");
