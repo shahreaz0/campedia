@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const path = require("path");
 
 const campSchema = mongoose.Schema(
 	{
@@ -6,7 +7,7 @@ const campSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		imageUrl: {
+		imageName: {
 			type: String,
 			required: true,
 		},
@@ -15,5 +16,11 @@ const campSchema = mongoose.Schema(
 		timestamps: true,
 	},
 );
+
+campSchema.virtual("imageUrl").get(function () {
+	if (this.imageName) {
+		return "\\" + path.join("img", "campImg", this.imageName);
+	}
+});
 
 module.exports = mongoose.model("Camp", campSchema);

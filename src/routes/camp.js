@@ -28,11 +28,11 @@ router.post("/camps", upload.single("campImg"), async (req, res) => {
 	try {
 		const camp = new Camp({
 			name: req.body.campName,
-			imageUrl: "\\" + path.join("img", "campImg", req.file.filename),
+			imageName: req.file.filename,
 		});
 
 		await camp.save();
-		console.log(camp);
+		console.log(camp.imageUrl);
 		res.redirect("/camps");
 	} catch (error) {
 		console.log(error);
