@@ -2,7 +2,7 @@
 const path = require("path");
 const express = require("express");
 const chalk = require("chalk");
-
+const methodOverride = require("method-override");
 //database connection
 require("./configs/db");
 
@@ -16,6 +16,7 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join("public")));
+app.use(methodOverride("_method"));
 
 // routes config
 app.get("/", (req, res) => {

@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const path = require("path");
+const fs = require("fs");
 const multer = require("multer");
 const Camp = require("../models/Camp");
 
@@ -34,7 +35,6 @@ router.post("/camps", upload.single("campImg"), async (req, res) => {
 		});
 
 		await camp.save();
-		console.log(camp.imageUrl);
 		res.redirect("/camps");
 	} catch (error) {
 		console.log(error);
@@ -52,6 +52,61 @@ router.get("/camps/:id", async (req, res) => {
 	} catch (error) {
 		console.log(error);
 	}
+});
+
+router.get("/camps/:id/edit", async (req, res) => {
+	try {
+		const camp = await Camp.findById(req.params.id);
+		res.render("edit", { pageTitle: "Edit camp", camp });
+	} catch (error) {
+		console.log(error);
+	}
+});
+
+router.put("/camps/:id", upload.single("campImg"), async (req, res) => {
+	try {
+		// find camp by id
+		const camp = await Camp.findById(req.params.id);
+
+		// delete the old image
+		fs.unlink(
+			path.join("public", "img", "campImg", camp.imageName),
+			(error) => {
+				if (error) throw error;
+			},
+		);
+
+		// edit
+		camp.name = req.body.name;
+		camp.description = req.body.description;
+		camp.imageName = req.file.filename;
+
+		//save
+		await camp.save();
+
+		//redirect
+		res.redirect(`/camps/${req.params.id}`);
+	} catch (error) {
+		console.log(error);
+	}
+});
+
+router.delete("/camps/:id", async (req, res) => {
+	const camp = await Camp.findById(req.params.id);
+
+	// delete the old image
+	fs.unlink(
+		path.join("public", "img", "campImg", camp.imageName),
+		(error) => {
+			if (error) throw error;
+		},
+	);
+
+	//remove
+	await camp.remove();
+
+	//redirect
+	res.redirect("/camps");
 });
 
 module.exports = router;
