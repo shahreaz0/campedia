@@ -1,11 +1,8 @@
 <%- include("partials/top") %>
 
-<% camps.forEach(camp => { %>
 <h3><%= camp.name %> </h3>
 <img src="<%= camp.imageUrl %> " alt="<%= camp.name %> ">
-<h4><%= camp.description %> </h4>
-<a href="/camps/<%= camp._id %> ">More details</a>
-
-<% }) %>
+<h4><%= camp.description %></h4>
+<a href="/camps">Back</a>
 
 <%- include("partials/bottom") %>
