@@ -7,7 +7,8 @@ const methodOverride = require("method-override");
 require("./configs/db");
 
 // routes
-const campRoutes = require("./routes/camp");
+const campRoutes = require("./routes/camps");
+const commentRoutes = require("./routes/comments");
 
 // express config
 const app = express();
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(campRoutes);
+app.use(commentRoutes);
 
 app.get("*", (req, res) => {
 	res.render("404", { pageTitle: "404", error: "Page not found." });

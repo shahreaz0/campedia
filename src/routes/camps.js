@@ -20,7 +20,7 @@ const upload = multer({
 router.get("/camps", async (req, res) => {
 	try {
 		const camps = await Camp.find({});
-		res.render("camps", { pageTitle: "Camps", camps });
+		res.render("camps/index", { pageTitle: "Camps", camps });
 	} catch (error) {
 		console.log(error);
 	}
@@ -42,13 +42,13 @@ router.post("/camps", upload.single("campImg"), async (req, res) => {
 });
 
 router.get("/camps/new", (req, res) => {
-	res.render("new", { pageTitle: "Add Camp" });
+	res.render("camps/new", { pageTitle: "Add Camp" });
 });
 
 router.get("/camps/:id", async (req, res) => {
 	try {
 		const camp = await Camp.findById(req.params.id);
-		res.render("show", { pageTitle: camp.name, camp });
+		res.render("camps/show", { pageTitle: camp.name, camp });
 	} catch (error) {
 		console.log(error);
 	}
@@ -57,7 +57,7 @@ router.get("/camps/:id", async (req, res) => {
 router.get("/camps/:id/edit", async (req, res) => {
 	try {
 		const camp = await Camp.findById(req.params.id);
-		res.render("edit", { pageTitle: "Edit camp", camp });
+		res.render("camps/edit", { pageTitle: "Edit camp", camp });
 	} catch (error) {
 		console.log(error);
 	}
