@@ -1,10 +1,29 @@
 const router = require("express").Router();
 
-// GET /camps/:id ---> shows all comments
+const Camp = require("../models/Camp");
+const Comment = require("../models/Comment");
 
-// GET /camps/:id ---> shows form
+// GET /camps/:id ---> shows all comments --> this routes already exists
+
+// GET /camps/:id ---> shows form --> this route already exists
 
 // POST /camps/:id/comments --> redirect to /camps/:id
+router.post("/camps/:id/comments", async (req, res) => {
+	try {
+		const camp = await Camp.findById(req.params.id);
+		const comment = new Comment({
+			content: req.body.content,
+			author: req.body.author,
+		});
+
+		await comment.save();
+		camp.comments.push(comment);
+		await camp.save();
+		res.redirect("/camps/" + req.params.id);
+	} catch (error) {
+		console.log(error);
+	}
+});
 
 // PUT /camps/:id/comments/:id --> edit form
 

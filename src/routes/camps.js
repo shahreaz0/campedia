@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
 const Camp = require("../models/Camp");
+const Comment = require("../models/Comment");
 
 // multer config
 const upload = multer({
@@ -45,9 +46,13 @@ router.get("/camps/new", (req, res) => {
 	res.render("camps/new", { pageTitle: "Add Camp" });
 });
 
+// show single camp + shows all comments + show comment form
 router.get("/camps/:id", async (req, res) => {
 	try {
-		const camp = await Camp.findById(req.params.id);
+		const camp = await Camp.findById(req.params.id)
+			.populate("comments")
+			.exec();
+		console.log(camp);
 		res.render("camps/show", { pageTitle: camp.name, camp });
 	} catch (error) {
 		console.log(error);
