@@ -3,12 +3,16 @@ const path = require("path");
 const express = require("express");
 const chalk = require("chalk");
 const methodOverride = require("method-override");
+const passport = require("passport");
+const expressSession = require("express-session");
+
 //database connection
 require("./configs/db");
 
-// routes
+// routes file
 const campRoutes = require("./routes/camps");
 const commentRoutes = require("./routes/comments");
+const authRoutes = require("./routes/auth");
 
 // express config
 const app = express();
@@ -18,12 +22,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join("public")));
 app.use(methodOverride("_method"));
+app.use(
+	expressSession({
+		secret: "People don't like secrets but they keep it with them all the time.",
+		resave: false,
+		saveUninitialized: false,
+	}),
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+//passport config
+require("./configs/passport");
 
 // routes config
 app.get("/", (req, res) => {
 	res.render("home", { title: "Home" });
 });
 
+app.use(authRoutes);
 app.use(campRoutes);
 app.use(commentRoutes);
 

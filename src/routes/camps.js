@@ -3,7 +3,6 @@ const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
 const Camp = require("../models/Camp");
-const Comment = require("../models/Comment");
 
 // multer config
 const upload = multer({
@@ -23,6 +22,7 @@ router.get("/camps", async (req, res) => {
 		const camps = await Camp.find({});
 		res.render("camps/index", { pageTitle: "Camps", camps });
 	} catch (error) {
+		res.redirect("/");
 		console.log(error);
 	}
 });
@@ -38,6 +38,7 @@ router.post("/camps", upload.single("campImg"), async (req, res) => {
 		await camp.save();
 		res.redirect("/camps");
 	} catch (error) {
+		res.redirect("/camps");
 		console.log(error);
 	}
 });
@@ -55,6 +56,7 @@ router.get("/camps/:id", async (req, res) => {
 		console.log(camp);
 		res.render("camps/show", { pageTitle: camp.name, camp });
 	} catch (error) {
+		res.redirect("camps");
 		console.log(error);
 	}
 });
@@ -64,6 +66,7 @@ router.get("/camps/:id/edit", async (req, res) => {
 		const camp = await Camp.findById(req.params.id);
 		res.render("camps/edit", { pageTitle: "Edit camp", camp });
 	} catch (error) {
+		res.redirect(`/camps/${req.params.id}`);
 		console.log(error);
 	}
 });
@@ -92,26 +95,32 @@ router.put("/camps/:id", upload.single("campImg"), async (req, res) => {
 		//redirect
 		res.redirect(`/camps/${req.params.id}`);
 	} catch (error) {
+		res.redirect(`/camps/${req.params.id}`);
 		console.log(error);
 	}
 });
 
 router.delete("/camps/:id", async (req, res) => {
-	const camp = await Camp.findById(req.params.id);
+	try {
+		const camp = await Camp.findById(req.params.id);
 
-	// delete the old image
-	fs.unlink(
-		path.join("public", "img", "campImg", camp.imageName),
-		(error) => {
-			if (error) throw error;
-		},
-	);
+		// delete the old image
+		fs.unlink(
+			path.join("public", "img", "campImg", camp.imageName),
+			(error) => {
+				if (error) throw error;
+			},
+		);
 
-	//remove
-	await camp.remove();
+		//remove
+		await camp.remove();
 
-	//redirect
-	res.redirect("/camps");
+		//redirect
+		res.redirect("/camps");
+	} catch (error) {
+		res.redirect("/camps");
+		console.log(error);
+	}
 });
 
 module.exports = router;

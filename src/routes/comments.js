@@ -21,6 +21,7 @@ router.post("/camps/:id/comments", async (req, res) => {
 		await camp.save();
 		res.redirect("/camps/" + req.params.id);
 	} catch (error) {
+		res.redirect(`/camps/${req.params.id}`);
 		console.log(error);
 	}
 });
