@@ -2,11 +2,11 @@ const router = require("express").Router();
 const User = require("../models/User");
 const passport = require("passport");
 
-// get /register shows register form
+// passport-local
 router.get("/register", (req, res) => {
 	res.render("auth/register", { pageTitle: "Register" });
 });
-// post /register
+
 router.post("/register", async (req, res) => {
 	try {
 		const existedUser = await User.find({ username: req.body.username });
@@ -23,11 +23,11 @@ router.post("/register", async (req, res) => {
 		res.redirect("/register");
 	}
 });
-// get /login shows login form
+
 router.get("/login", (req, res) => {
 	res.render("auth/login", { pageTitle: "Login" });
 });
-// post /login
+
 router.post(
 	"/login",
 	passport.authenticate("local", {
@@ -37,6 +37,19 @@ router.post(
 	(req, res) => {},
 );
 
+//passport-google-oauth20
+router.get(
+	"/auth/google",
+	passport.authenticate("google", {
+		scope: ["profile"],
+	}),
+);
+
+router.get("/auth/google/cb", passport.authenticate("google"), (req, res) => {
+	res.redirect("/camps");
+});
+
+//logout
 router.get("/logout", (req, res) => {
 	req.logout();
 	res.redirect("/camps");

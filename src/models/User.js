@@ -11,6 +11,13 @@ const userSchema = mongoose.Schema({
 		type: String,
 		minlength: 6,
 	},
+	googleId: {
+		type: String,
+	},
+	thumbnail: {
+		type: String,
+		default: "https://tinyurl.com/y6qo86km",
+	},
 });
 
 userSchema.plugin(passportLocalMongoose);
