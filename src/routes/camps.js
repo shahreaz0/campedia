@@ -3,6 +3,13 @@ const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
 const Camp = require("../models/Camp");
+const { userInfo } = require("os");
+
+//middleware
+const isLoggedIn = (req, res, next) => {
+	if (!req.isAuthenticated()) return res.redirect("/login");
+	next();
+};
 
 // multer config
 const upload = multer({
@@ -27,7 +34,7 @@ router.get("/camps", async (req, res) => {
 	}
 });
 
-router.post("/camps", upload.single("campImg"), async (req, res) => {
+router.post("/camps", upload.single("campImg"), isLoggedIn, async (req, res) => {
 	try {
 		const camp = new Camp({
 			name: req.body.campName,
@@ -43,16 +50,14 @@ router.post("/camps", upload.single("campImg"), async (req, res) => {
 	}
 });
 
-router.get("/camps/new", (req, res) => {
+router.get("/camps/new", isLoggedIn, (req, res) => {
 	res.render("camps/new", { pageTitle: "Add Camp" });
 });
 
 // show single camp + shows all comments + show comment form
 router.get("/camps/:id", async (req, res) => {
 	try {
-		const camp = await Camp.findById(req.params.id)
-			.populate("comments")
-			.exec();
+		const camp = await Camp.findById(req.params.id).populate("comments").exec();
 		console.log(camp);
 		res.render("camps/show", { pageTitle: camp.name, camp });
 	} catch (error) {
@@ -77,12 +82,9 @@ router.put("/camps/:id", upload.single("campImg"), async (req, res) => {
 		const camp = await Camp.findById(req.params.id);
 
 		// delete the old image
-		fs.unlink(
-			path.join("public", "img", "campImg", camp.imageName),
-			(error) => {
-				if (error) throw error;
-			},
-		);
+		fs.unlink(path.join("public", "img", "campImg", camp.imageName), (error) => {
+			if (error) throw error;
+		});
 
 		// edit
 		camp.name = req.body.name;
@@ -105,12 +107,9 @@ router.delete("/camps/:id", async (req, res) => {
 		const camp = await Camp.findById(req.params.id);
 
 		// delete the old image
-		fs.unlink(
-			path.join("public", "img", "campImg", camp.imageName),
-			(error) => {
-				if (error) throw error;
-			},
-		);
+		fs.unlink(path.join("public", "img", "campImg", camp.imageName), (error) => {
+			if (error) throw error;
+		});
 
 		//remove
 		await camp.remove();
