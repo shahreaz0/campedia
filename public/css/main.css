@@ -7,7 +7,16 @@ a {
 	color: #00b7ff;
 }
 
-#navbar .navbar__list {
+#navbar {
+	display: flex;
+	justify-content: space-between;
+}
+
+#navbar .navbar__left {
+	display: flex;
+}
+
+#navbar .navbar__right {
 	display: flex;
 }
 
