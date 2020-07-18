@@ -37,4 +37,9 @@ router.post(
 	(req, res) => {},
 );
 
+router.get("/logout", (req, res) => {
+	req.logout();
+	res.redirect("/camps");
+});
+
 module.exports = router;

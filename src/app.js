@@ -35,6 +35,12 @@ app.use(passport.session());
 //passport config
 require("./configs/passport");
 
+//middleware
+app.use((req, res, next) => {
+	res.locals.user = req.user;
+	next();
+});
+
 // routes config
 app.get("/", (req, res) => {
 	res.render("home", { title: "Home" });

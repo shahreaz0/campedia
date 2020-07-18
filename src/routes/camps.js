@@ -27,7 +27,7 @@ const upload = multer({
 router.get("/camps", async (req, res) => {
 	try {
 		const camps = await Camp.find({});
-		res.render("camps/index", { pageTitle: "Camps", camps });
+		res.render("camps/index", { pageTitle: "Camps", camps, user: req.user });
 	} catch (error) {
 		res.redirect("/");
 		console.log(error);
@@ -58,7 +58,6 @@ router.get("/camps/new", isLoggedIn, (req, res) => {
 router.get("/camps/:id", async (req, res) => {
 	try {
 		const camp = await Camp.findById(req.params.id).populate("comments").exec();
-		console.log(camp);
 		res.render("camps/show", { pageTitle: camp.name, camp });
 	} catch (error) {
 		res.redirect("camps");
