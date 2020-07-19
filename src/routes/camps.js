@@ -26,8 +26,9 @@ const upload = multer({
 // routes
 router.get("/camps", async (req, res) => {
 	try {
-		const camps = await Camp.find({});
-		res.render("camps/index", { pageTitle: "Camps", camps, user: req.user });
+		const camps = await Camp.find({}).populate("creator").exec();
+		console.log(camps);
+		res.render("camps/index", { pageTitle: "Camps", camps });
 	} catch (error) {
 		res.redirect("/");
 		console.log(error);
@@ -40,8 +41,8 @@ router.post("/camps", upload.single("campImg"), isLoggedIn, async (req, res) => 
 			name: req.body.campName,
 			imageName: req.file.filename,
 			description: req.body.description,
+			creator: req.user._id,
 		});
-
 		await camp.save();
 		res.redirect("/camps");
 	} catch (error) {
@@ -58,6 +59,7 @@ router.get("/camps/new", isLoggedIn, (req, res) => {
 router.get("/camps/:id", async (req, res) => {
 	try {
 		const camp = await Camp.findById(req.params.id).populate("comments").exec();
+		console.log(camp);
 		res.render("camps/show", { pageTitle: camp.name, camp });
 	} catch (error) {
 		res.redirect("camps");

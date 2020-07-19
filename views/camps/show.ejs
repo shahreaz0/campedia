@@ -18,7 +18,10 @@
 
         <% camp.comments.forEach(comment => { %>
 
-        <p><em><%= comment.author %> </em> - <%= comment.content %> </p>
+        <div class="user-comments">
+            <p><b><%= comment.author %></b> - <%= comment.content %></p>
+            <p><i><%= comment.date.toLocaleString() %></i></p>
+        </div>
 
         <% }); %>
 
@@ -27,8 +30,6 @@
     <% if(user) { %>
     <div id="comment-section__form">
         <form action="/camps/<%= camp._id %>/comments" method="POST">
-            <input type="text" name="author" placeholder="Author"> <br>
-            <!-- <input type="text" name="content" placeholder="Comment"> -->
             <textarea name="content" id="" cols="30" rows="5" placeholder="Comment"></textarea> <br>
             <input type="submit" value="Comment">
         </form>

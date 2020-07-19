@@ -8,6 +8,7 @@
     <h3><%= camp.name %> </h3>
     <img src="<%= camp.imageUrl %>" alt="<%= camp.name %>" height="200" width="350">
     <h4><%= camp.description %> </h4>
+    <p><i>by <%= camp.creator.username %> - <%= camp.createdAt.toDateString() %> </i> </p>
     <a href="/camps/<%= camp._id %> ">More details</a>
 </section>
 
