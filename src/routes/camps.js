@@ -27,7 +27,6 @@ const upload = multer({
 router.get("/camps", async (req, res) => {
 	try {
 		const camps = await Camp.find({}).populate("creator").exec();
-		console.log(camps);
 		res.render("camps/index", { pageTitle: "Camps", camps });
 	} catch (error) {
 		res.redirect("/");
@@ -83,14 +82,17 @@ router.put("/camps/:id", upload.single("campImg"), async (req, res) => {
 		const camp = await Camp.findById(req.params.id);
 
 		// delete the old image
-		fs.unlink(path.join("public", "img", "campImg", camp.imageName), (error) => {
-			if (error) throw error;
-		});
+
+		if (req.file) {
+			fs.unlink(path.join("public", "img", "campImg", camp.imageName), (error) => {
+				if (error) throw error;
+			});
+			camp.imageName = req.file.filename;
+		}
 
 		// edit
-		camp.name = req.body.name;
-		camp.description = req.body.description;
-		camp.imageName = req.file.filename;
+		if (req.body.name) camp.name = req.body.name;
+		if (req.body.description) camp.description = req.body.description;
 
 		//save
 		await camp.save();
