@@ -11,6 +11,18 @@ const isLoggedIn = (req, res, next) => {
 	next();
 };
 
+const isCampOwner = async (req, res, next) => {
+	// if not authentic than redirect back
+	if (!req.isAuthenticated()) return res.redirect("back");
+
+	// if camps creator === loggedIn user than go next
+	const camp = await Camp.findById(req.params.id);
+	if (camp.creator.equals(req.user._id)) return next();
+
+	//else redirect
+	res.redirect("back");
+};
+
 // multer config
 const upload = multer({
 	dest: path.join("public", "img", "campImg"),
@@ -58,7 +70,6 @@ router.get("/camps/new", isLoggedIn, (req, res) => {
 router.get("/camps/:id", async (req, res) => {
 	try {
 		const camp = await Camp.findById(req.params.id).populate("comments").exec();
-		console.log(camp);
 		res.render("camps/show", { pageTitle: camp.name, camp });
 	} catch (error) {
 		res.redirect("camps");
@@ -66,7 +77,7 @@ router.get("/camps/:id", async (req, res) => {
 	}
 });
 
-router.get("/camps/:id/edit", async (req, res) => {
+router.get("/camps/:id/edit", isCampOwner, async (req, res) => {
 	try {
 		const camp = await Camp.findById(req.params.id);
 		res.render("camps/edit", { pageTitle: "Edit camp", camp });
@@ -76,7 +87,7 @@ router.get("/camps/:id/edit", async (req, res) => {
 	}
 });
 
-router.put("/camps/:id", upload.single("campImg"), async (req, res) => {
+router.put("/camps/:id", isCampOwner, upload.single("campImg"), async (req, res) => {
 	try {
 		// find camp by id
 		const camp = await Camp.findById(req.params.id);
@@ -105,7 +116,7 @@ router.put("/camps/:id", upload.single("campImg"), async (req, res) => {
 	}
 });
 
-router.delete("/camps/:id", async (req, res) => {
+router.delete("/camps/:id", isCampOwner, async (req, res) => {
 	try {
 		const camp = await Camp.findById(req.params.id);
 
