@@ -32,8 +32,34 @@ router.post("/camps/:id/comments", isLoggedIn, async (req, res) => {
 	}
 });
 
+// get /camps/:id/comments/:id --> edit form
+router.get("/camps/:id1/comments/:id2/edit", isLoggedIn, async (req, res) => {
+	const comment = await Comment.findById(req.params.id2);
+	res.render("comments/edit", {
+		pageTitle: "Edit comments",
+		campId: req.params.id1,
+		comment,
+	});
+});
+
 // PUT /camps/:id/comments/:id --> edit form
+router.put("/camps/:id1/comments/:id2", isLoggedIn, async (req, res) => {
+	const comment = await Comment.findById(req.params.id2);
+
+	if (req.body.content) comment.content = req.body.content;
+
+	await comment.save();
+
+	res.redirect(`/camps/${req.params.id1}`);
+});
 
 // DELETE /camps/:id/comments/:id --> delete comment
+router.delete("/camps/:id1/comments/:id2", isLoggedIn, async (req, res) => {
+	const comment = await Comment.findById(req.params.id2);
+
+	await comment.remove();
+
+	res.redirect(`/camps/${req.params.id1}`);
+});
 
 module.exports = router;
