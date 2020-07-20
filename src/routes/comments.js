@@ -4,19 +4,7 @@ const Camp = require("../models/Camp");
 const Comment = require("../models/Comment");
 
 //middleware
-const isLoggedIn = (req, res, next) => {
-	if (!req.isAuthenticated()) return res.redirect("/login");
-	next();
-};
-
-const isCommentOwner = async (req, res, next) => {
-	if (!req.isAuthenticated()) res.redirect("/login");
-
-	const comment = await Comment.findById(req.params.id2);
-	if (comment.author === req.user.username) return next();
-
-	res.redirect("back");
-};
+const { isLoggedIn, isCommentOwner } = require("../configs/middleware");
 
 // GET /camps/:id ---> shows all comments --> this route is camp show page
 

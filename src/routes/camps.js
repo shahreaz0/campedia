@@ -6,22 +6,7 @@ const Camp = require("../models/Camp");
 const { userInfo } = require("os");
 
 //middleware
-const isLoggedIn = (req, res, next) => {
-	if (!req.isAuthenticated()) return res.redirect("/login");
-	next();
-};
-
-const isCampOwner = async (req, res, next) => {
-	// if not authentic than redirect back
-	if (!req.isAuthenticated()) return res.redirect("back");
-
-	// if camps creator === loggedIn user than go next
-	const camp = await Camp.findById(req.params.id);
-	if (camp.creator.equals(req.user._id)) return next();
-
-	//else redirect
-	res.redirect("back");
-};
+const { isLoggedIn, isCampOwner } = require("../configs/middleware");
 
 // multer config
 const upload = multer({
