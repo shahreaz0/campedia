@@ -1,3 +1,6 @@
+const Camp = require("../models/Camp");
+const Comment = require("../models/Comment");
+
 exports.isLoggedIn = (req, res, next) => {
 	if (!req.isAuthenticated()) return res.redirect("/login");
 	next();
